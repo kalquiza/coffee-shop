@@ -133,14 +133,14 @@ def create_app(test_config=None):
 
   @app.route('/questions', methods=['POST'])
   def create_question():
-    body = request.get_json()
-
-    new_question = body.get('question', None)
-    new_answer = body.get('answer', None)
-    new_category = body.get('category', None)
-    new_difficulty = body.get('difficulty', None)
-
     try:
+      body = request.get_json()
+
+      new_question = body.get('question', None)
+      new_answer = body.get('answer', None)
+      new_category = body.get('category', None)
+      new_difficulty = body.get('difficulty', None)
+
       question = Question(question=new_question, answer=new_answer, category=new_category, difficulty=new_difficulty)
       question.insert()
 
@@ -169,10 +169,9 @@ def create_app(test_config=None):
   '''
   @app.route('/questions/search', methods=['POST'])
   def search_questions():
-    body = request.get_json()
-    search_term = body.get('searchTerm', None)
-
     try:
+      body = request.get_json()
+      search_term = body.get('searchTerm', None)
       search='%'+search_term+'%'
       selection = Question.query.order_by(Question.id).filter(Question.question.ilike(search)).all()
       questions = paginate_questions(request, selection)
@@ -197,9 +196,13 @@ def create_app(test_config=None):
   '''
   @app.route('/categories/<int:category_id>/questions', methods=['GET'])
   def get_questions_by_category(category_id):
-
     try:
-      selection = Question.query.order_by(Question.id).filter(Question.category == category_id+1).all()
+      category = Category.query.filter(Category.id == str(category_id+1)).one_or_none()
+
+      if category is None:
+        abort(404)
+ 
+      selection = Question.query.order_by(Question.id).filter(Question.category == str(category_id+1)).all()
       questions = paginate_questions(request, selection)
 
       return jsonify({
@@ -210,7 +213,7 @@ def create_app(test_config=None):
       })
 
     except:
-      abort(422)
+      abort(404)
 
   '''
   @TODO: 
@@ -223,7 +226,36 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
+  @app.route('/quizzes', methods=['POST'])
+  def get_quiz_questions():
+    try:
+      body = request.get_json()
+      quiz_category = body.get('quiz_category', None).get('id', None)
+      previous_questions = body.get('previous_questions', None)
 
+      if quiz_category == -1:
+        selection = Question.query.order_by(Question.id).all()
+      else:
+        selection = Question.query.order_by(Question.id).filter(Question.category == str(int(quiz_category)+1)).all()
+      
+      questions = [question.format() for question in selection]
+      available_questions = [question for question in questions if question.get('id', None) not in previous_questions]
+
+      if len(available_questions) != 0:
+        question = available_questions.pop(random.randrange(len(available_questions)))
+        previous_questions.append(question.get('id', None))
+      else:
+        question = None
+
+      return jsonify({
+        'success': True,
+        'question': question,
+        'previous_questions': previous_questions
+      })
+
+    except:
+      abort(422)
+      
   '''
   Create error handlers for all expected errors 
   '''
