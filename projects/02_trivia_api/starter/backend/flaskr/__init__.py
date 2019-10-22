@@ -46,9 +46,9 @@ def create_app(test_config=None):
   '''
 
   @app.route('/categories', methods=['GET'])
-  def retrieve_categories():
+  def get_categories():
     selection = Category.query.order_by(Category.id).all()
-    categories = [category.format() for category in selection]
+    categories = [category.type for category in selection]
 
     if len(categories) == 0:
       abort(404)
