@@ -171,7 +171,6 @@ def create_app(test_config=None):
   def search_questions():
 
     try:
-      search_term = '?'
       search='%'+search_term+'%'
       selection = Question.query.order_by(Question.id).filter(Question.question.ilike(search)).all()
       current_questions = paginate_questions(request, selection)
@@ -193,20 +192,18 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-  @app.route('/questions/search', methods=['POST'])
-  def get_questions_by_category():
+  @app.route('/categories/<int:category_id>/questions', methods=['GET'])
+  def get_questions_by_category(category_id):
 
     try:
-      category = 'Category'
-      search='%'+category+'%'
-      selection = Question.query.order_by(Question.id).filter(Question.category.like(search)).all()
-      current_questions = paginate_questions(request, selection)
+      selection = Question.query.order_by(Question.id).filter(Question.category == category_id+1).all()
+      questions = paginate_questions(request, selection)
 
       return jsonify({
         'success': True,
-        'category': category,
-        'questions': current_questions,
-        'count': len(current_questions)
+        'questions': questions,
+        'total_questions': len(questions),
+        'current_category': category_id+1
       })
 
     except:
