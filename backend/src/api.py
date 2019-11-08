@@ -77,34 +77,34 @@ CORS(app)
 
 ## Error Handling
 '''
-Example error handling for unprocessable entity
+Error handling for unprocessable entity
 '''
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
                     "success": False, 
                     "error": 422,
-                    "message": "unprocessable"
+        "message": "Unprocessable"
                     }), 422
 
 '''
-@TODO implement error handlers using the @app.errorhandler(error) decorator
-    each error handler should return (with approprate messages):
-             jsonify({
-                    "success": False, 
-                    "error": 404,
-                    "message": "resource not found"
-                    }), 404
+Error handler for the requested resource could not be found
+'''
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+                "success": False, 
+                "error": 404,
+        "message": "Resource not found"
+                }), 404
 
 '''
-
+Error handler for when authentication is required and has failed or has not yet been provided
 '''
-@TODO implement error handler for 404
-    error handler should conform to general task above 
-'''
-
-
-'''
-@TODO implement error handler for AuthError
-    error handler should conform to general task above 
-'''
+@app.errorhandler(401)
+def unauthorized(error):
+    return jsonify({
+        "success": False,
+        "error": 401,
+        "message": "Unauthorized"
+    }), 401
