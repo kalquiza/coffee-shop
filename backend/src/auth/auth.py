@@ -9,18 +9,20 @@ AUTH0_DOMAIN = 'dev-2s1k6c84.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'coffee'
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-## Auth Header
+# Auth Header
 
 def get_token_auth_header():
     """
@@ -65,18 +67,21 @@ def get_token_auth_header():
 
 def check_permissions(permission, payload):
     """
-        Checks the requested permission string is in the payload permissions array.
+        Checks the requested permission string is in the payload permissions
+        array.
 
         Args:
             permission: string permission (i.e. 'post:drink').
             payload: decoded jwt payload.
 
         Returns:
-            True if the requested permission string is in the payload permissions array.
+            True if the requested permission string is in the payload
+            permissions array.
 
         Raises:
             AuthError: if the permissions array is not included in the payload.
-            AuthError: if the requested permission string is not in the payload permissions array.
+            AuthError: if the requested permission string is not in the
+                payload permissions array.
     """
     if 'permissions' not in payload:
         raise AuthError({
@@ -91,6 +96,7 @@ def check_permissions(permission, payload):
         }, 403)
     return True
 
+
 def verify_decode_jwt(token):
     """
         Verifies the token using Auth0 /.well-known/jwks.json
@@ -102,7 +108,7 @@ def verify_decode_jwt(token):
             The decoded payload.
 
         Raises:
-            AuthError: if the token is not a valid Auth0 token with key id (kid)
+            AuthError: if the token is not a valid Auth0 token with key id
             AuthError: if the header is malformed.
             AuthError: if the token is expired.
             AuthError: if the claims are invalid
@@ -147,7 +153,8 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
+                'description':
+                    'Incorrect claims. Please, check the audience and issuer.'
             }, 401)
         except Exception:
             raise AuthError({
@@ -159,9 +166,11 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
             }, 400)
 
+
 def requires_auth(permission=''):
     """
-    Returns the decorator which passes the decoded payload to the decorated method
+    Returns the decorator which passes the decoded payload to the decorated
+        method
 
     Args:
         permission: string permission (i.e. 'post:drink')
