@@ -9,11 +9,12 @@ AUTH0_DOMAIN = 'dev-2s1k6c84.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'coffee'
 
-# AuthError Exception
-'''
-AuthError Exception
+
+""" AuthError Exception """
+
+"""
 A standardized way to communicate auth failure modes
-'''
+"""
 
 
 class AuthError(Exception):
@@ -22,18 +23,18 @@ class AuthError(Exception):
         self.status_code = status_code
 
 
-# Auth Header
+""" Auth Header """
+
 
 def get_token_auth_header():
-    """
-        Obtains the access token from the authorization header.
+    """Obtains the access token from the authorization header.
 
-        Returns:
-            The token part of the header.
+    Returns:
+        The token part of the header.
 
-        Raises:
-            AuthError: if no header is present.
-            AuthError: if the header is malformed.
+    Raises:
+        AuthError: if no header is present.
+        AuthError: if the header is malformed.
     """
     auth = request.headers.get('Authorization', None)
     if not auth:
@@ -66,22 +67,21 @@ def get_token_auth_header():
 
 
 def check_permissions(permission, payload):
-    """
-        Checks the requested permission string is in the payload permissions
+    """Checks the requested permission string is in the payload permissions
         array.
 
-        Args:
-            permission: string permission (i.e. 'post:drink').
-            payload: decoded jwt payload.
+    Args:
+        permission: string permission (i.e. 'post:drink').
+        payload: decoded jwt payload.
 
-        Returns:
-            True if the requested permission string is in the payload
-            permissions array.
+    Returns:
+        True if the requested permission string is in the payload permissions
+        array.
 
-        Raises:
-            AuthError: if the permissions array is not included in the payload.
-            AuthError: if the requested permission string is not in the
-                payload permissions array.
+    Raises:
+        AuthError: if the permissions array is not included in the payload.
+        AuthError: if the requested permission string is not in the payload
+                    permissions array.
     """
     if 'permissions' not in payload:
         raise AuthError({
@@ -98,20 +98,19 @@ def check_permissions(permission, payload):
 
 
 def verify_decode_jwt(token):
-    """
-        Verifies the token using Auth0 /.well-known/jwks.json
+    """Verifies the token using Auth0 /.well-known/jwks.json.
 
-        Args:
-            token: a json web token (string).
+    Args:
+        token: a json web token (string).
 
-        Returns:
-            The decoded payload.
+    Returns:
+        The decoded payload.
 
-        Raises:
-            AuthError: if the token is not a valid Auth0 token with key id
-            AuthError: if the header is malformed.
-            AuthError: if the token is expired.
-            AuthError: if the claims are invalid
+    Raises:
+        AuthError: if the token is not a valid Auth0 token with key id.
+        AuthError: if the header is malformed.
+        AuthError: if the token is expired.
+        AuthError: if the claims are invalid.
     """
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -168,12 +167,11 @@ def verify_decode_jwt(token):
 
 
 def requires_auth(permission=''):
-    """
-    Returns the decorator which passes the decoded payload to the decorated
-        method
+    """Returns the decorator which passes the decoded payload to the decorated
+        method.
 
     Args:
-        permission: string permission (i.e. 'post:drink')
+        permission: string permission (i.e. 'post:drink').
     """
     def requires_auth_decorator(f):
         @wraps(f)
