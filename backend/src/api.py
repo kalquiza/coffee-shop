@@ -12,7 +12,7 @@ setup_db(app)
 CORS(app)
 
 '''
-@TODO uncomment the following line to initialize the datbase
+Uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
@@ -27,7 +27,16 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['GET'])
+def get_drinks():
+    """ """
+    selection = Drink.query.order_by(Drink.id).all()
+    drinks = [drink.short() for drink in selection]
 
+    return jsonify({
+        'success': True,
+        'drinks': drinks
+    }), 200
 
 '''
 @TODO implement endpoint
@@ -37,6 +46,17 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks-detail', methods=['GET'])
+@requires_auth('get:drinks-detail')
+def get_drinks_detail(jwt):
+        """ """
+        selection = Drink.query.order_by(Drink.id).all()
+        drinks = [drink.long() for drink in selection]
+
+        return jsonify({
+            'success': True,
+            'drinks': drinks
+        }), 200
 
 
 '''
@@ -48,7 +68,24 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
+def create_drink(jwt):
+    try:
+        body = request.get_json()
+        req_title = body.get('title', None)
+        req_recipe = json.dumps(body.get('recipe', None))
+        
+        drink = Drink(title=req_title, recipe=req_recipe)
+        drink.insert()
 
+        return jsonify({
+            'success': True,
+            'drink': drink.long()
+        }), 200
+
+    except Exception as e:
+        abort(422)
 
 '''
 @TODO implement endpoint
@@ -61,7 +98,31 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks/<int:drink_id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def update_drink(jwt, drink_id):
+    try:
+        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
 
+        if drink is None:
+            abort(404)
+
+        body = request.get_json()
+        req_title = body.get('title', None)
+
+        drink.title = req_title
+
+        print(drink.long())
+
+        drink.update()
+
+        return jsonify({
+            'success': True,
+            'drinks': []
+        }), 200
+
+    except Exception as e:
+        abort(422)
 
 '''
 @TODO implement endpoint
@@ -73,8 +134,25 @@ CORS(app)
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks/<int:drink_id>', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drink(jwt, drink_id):
+    try:
+        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
 
+        if drink is None:
+            abort(404)
 
+        id = drink.id
+        drink.delete()
+
+        return jsonify({
+            'success': True,
+            'delete': id
+        }), 200
+
+    except Exception as e:
+        abort(422)
 ## Error Handling
 '''
 Error handling for unprocessable entity
