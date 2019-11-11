@@ -99,6 +99,95 @@ Test your endpoints with [Postman](https://getpostman.com).
 
 >_tip_: ensure you are providing a recent JWT to ensure it is not expired and the user has not logged out of the account.
 
+## API Reference
+
+### Endpoints
+
+#### GET /drinks
+- A public endpoint that retrieves the list of drinks.
+- Returns a success value and list of drinks in the drink.short() representation.
+> Example : `curl --location --request GET "localhost:5000/drinks"`
+```
+{
+   "drinks": [{
+         "id": 1,
+         "recipe": [{
+               "color": "blue",
+               "parts": 1
+        }],
+        "title":"Water"
+    }],
+   "success":true
+}
+```
+
+#### GET /drinks-detail
+- An endpoint that retrieves a detailed list of drinks. Requires the 'get:drinks-detail' permission.
+- Returns a success value and list of drinks in the drink.long() representation.
+> Example : `curl --location --request GET "localhost:5000/drinks-detail`
+```
+{
+    "drinks": [{
+        "id": 1,
+        "recipe": {
+            "color": "blue",
+            "name": "Water",
+            "parts": 1
+        },
+        "title": "Water"
+    }],
+    "success": true
+}
+```
+
+#### POST /drinks
+- An endpoint that creates a new row in the drinks table. Requires the 'post:drinks' permission.
+- Returns a success value and list containing only the newly created drink in the drink.long() representation.
+> Example: `curl http://127.0.0.1:5000/drinks -X POST -H "Authorization: Bearer <ACCESS_TOKEN>, Content-Type: application/json" -d '{"title": "Water", "recipe": {"name": "Water", "color": "blue", "parts": 1}}'`
+```
+{
+    "drink": {
+        "id": 1,
+        "recipe": {
+            "color": "blue",
+            "name": "Water",
+            "parts": 1
+        },
+        "title": "Water"
+    },
+    "success": true
+}
+```
+#### PATCH /drinks/\<id>
+-   An endpoint that updates the corresponding row for \<id>. Requires the 'patch:drinks' permission. Returns a success value and list containing only the updated drink in the drink.long() representation.
+> Example: `curl http://127.0.0.1:5000/drinks/1 -X PATCH -H "Authorization: Bearer <ACCESS_TOKEN>, Content-Type: application/json" -d '{"title": "Dihydrogen monoxide"}'`
+```
+{
+    "drink": {
+        "id": 1,
+        "recipe": {
+            "color": "blue",
+            "name": "Dihydrogen monoxide",
+            "parts": 1
+        },
+        "title": "Water"
+    },
+    "success": true
+}
+```
+
+#### DELETE /drinks/\<id>
+- An endpoint that deletes the corresponding row for \<id>. Requires the 'delete:drinks' permission.
+- Returns a success value and the id of the deleted record.
+> Example : `curl -X DELETE -H "Authorization: Bearer <ACCESS_TOKEN>" http://127.0.0.1:5000/drinks/1`
+```
+{
+    "delete": 1,
+    "success": true
+}
+```
+
+
 ## Error Handling
 Errors are returned as JSON objects in the following format:
 ```
