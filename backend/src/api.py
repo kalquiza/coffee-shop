@@ -124,12 +124,11 @@ def update_drink(jwt, drink_id):
             abort(404)
 
         body = request.get_json()
-        req_title = body.get('title', None)
+        req_title = body.get('title', drink.title)
+        req_recipe = json.dumps(body.get('recipe', drink.recipe))
 
         drink.title = req_title
-
-        print(drink.long())
-
+        drink.recipe = req_recipe
         drink.update()
 
         return jsonify({
