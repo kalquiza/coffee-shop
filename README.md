@@ -1,35 +1,53 @@
-# Coffee Shop Full Stack
+# Coffee Shop
 
-## Full Stack Nano - IAM Final Project
+## Full Stack Coffee Shop
 
-Udacity has decided to open a new digitally enabled cafe for students to order drinks, socialize, and study hard. But they need help setting up their menu experience.
-
-You have been called on to demonstrate your newly learned skills to create a full stack drink menu application. The application must:
+Udacity has decided to open a new digitally enabled cafe for students to order drinks, socialize, and study hard. This coffee shop web application serves the digital menu experience with the following features:
 
 1) Display graphics representing the ratios of ingredients in each drink.
-2) Allow public users to view drink names and graphics.
-3) Allow the shop baristas to see the recipe information.
+2) Allow the public to view drink names and graphics.
+3) Allow the shop baristas to view the recipe information.
 4) Allow the shop managers to create new drinks and edit existing drinks.
 
-## Tasks
+## Getting Started
 
-There are `@TODO` comments throughout project. We recommend tackling the sections in order. Start by reading the READMEs in:
-
-1. [`./backend/`](./backend/README.md)
-2. [`./frontend/`](./frontend/README.md)
-
-## About the Stack
-
-We started the full stack application for you. It is desiged with some key functional areas:
 
 ### Backend
 
-The `./backend` directory contains a partially completed Flask server with a pre-written SQLAlchemy module to simplify your data needs. You will need to complete the required endpoints, configure, and integrate Auth0 for authentication.
+The `./backend` directory contains the completed Flask server with a pre-written SQLAlchemy module to simplify your data needs. Instructions on installing backend dependencies and running the backend application are detailed in the `README.md` of the `./backend` directory. Additionally, API reference and testing instructions can also be found here.
 
 [View the README.md within ./backend for more details.](./backend/README.md)
 
 ### Frontend
 
-The `./frontend` directory contains a complete Ionic frontend to consume the data from the Flask server. You will only need to update the environment variables found within (./frontend/src/environment/environment.ts) to reflect the Auth0 configuration details set up for the backend app. 
+The `./frontend` directory contains a complete Ionic frontend to consume the data from the Flask server. Instructions on installing frontend dependencies and running the frontend application are detailed in the `README.md` of the `./frontend` directory.
 
 [View the README.md within ./frontend for more details.](./frontend/README.md)
+
+### Running the Application
+
+After setting up both the backend and frontend we can run the complete application altogether. To run the full application:
+
+From the `./backend/src` directory run:
+
+
+```bash
+export FLASK_APP=api.py;
+
+flask run --reload
+```
+
+From the `./frontend` directory run:
+
+```bash
+ionic serve
+```
+
+To see the full application in action, open the frontend application running at `http://localhost:8100/`
+
+## Authors
+
+Coffee Shop application implemented by Kristoffer Alquiza. Project starter code provided by the Full Stack Web Developer Course at [Udacity](https://www.udacity.com/course/).
+
+## Acknowledgements
+This project was completed as part of the Full Stack Web Developer Course at [Udacity](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd0044). Credit to the Udacity team for providing the couse content and starter code for this application.

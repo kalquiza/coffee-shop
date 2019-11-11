@@ -1,6 +1,6 @@
 # Coffee Shop Backend
 
-## Getting Started
+## Setting up the Backend
 
 ### Installing Dependencies
 
@@ -34,6 +34,17 @@ This will install all of the required packages we selected within the `requireme
 
 From within the `./src` directory first ensure you are working using your created virtual environment.
 
+**db_drop_and_create_all()** in **api.py** must be uncommented on the first run to initialize the database. This line is left uncommented by default. When the server is reloaded all records will be dropped and the database will start from scratch. Uncomment or remove this line if running a server where the data should persist.
+>_tip_: the postman collection tests on a newly initialized database, ensure this line is uncommented when testing.
+
+```py
+"""
+Uncomment the following line to initialize the datbase
+!! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
+!! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
+"""
+db_drop_and_create_all()
+```
 Each time you open a new terminal session, run:
 
 ```bash
@@ -48,38 +59,56 @@ flask run --reload
 
 The `--reload` flag will detect file changes and restart the server automatically.
 
-## Tasks
+## Setting up Auth0
+Use the third-party application [Auth0](https://auth0.com/) to implement authentication and role-based access control (**RBAC**).
 
-### Setup Auth0
-
-1. Create a new Auth0 Account
-2. Select a unique tenant domain
-3. Create a new, single page web application
-4. Create a new API
+- Create a new [Auth0](https://auth0.com/) Account
+- Select a unique tenant domain
+- Create a new, single page web application
+- Create a new API
     - in API Settings:
-        - Enable RBAC
-        - Enable Add Permissions in the Access Token
-5. Create new API permissions:
+      - Enable RBAC
+      - Enable Add Permissions in the Access Token
+- Create new API permissions:
     - `get:drinks-detail`
     - `post:drinks`
     - `patch:drinks`
     - `delete:drinks`
-6. Create new roles for:
+  
+- Create new roles for:
     - Barista
-        - can `get:drinks-detail`
+      - can `get:drinks-detail`
     - Manager
         - can perform all actions
-7. Test your endpoints with [Postman](https://getpostman.com). 
-    - Register 2 users - assign the Barista role to one and Manager role to the other.
-    - Sign into each account and make note of the JWT.
-    - Import the postman collection `./starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json`
-    - Right-clicking the collection folder for barista and manager, navigate to the authorization tab, and including the JWT in the token field (you should have noted these JWTs).
-    - Run the collection and correct any errors.
-    - Export the collection overwriting the one we've included so that we have your proper JWTs during review!
 
-### Implement The Server
+- Configure the application variables in `./src/auth/auth.py`:
+```py
+    AUTH0_DOMAIN = {AUTH0 DOMAIN PREFIX}
+    ALGORITHMS = ['RS256']
+    API_AUDIENCE = {AUTH0 APP API AUDIENCE}
+``` 
 
-There are `@TODO` comments throughout the `./backend/src`. We recommend tackling the files in order and from top to bottom:
+## Testing
+Test your endpoints with [Postman](https://getpostman.com). 
 
-1. `./src/auth/auth.py`
-2. `./src/api.py`
+- Register 2 users - assign the Barista role to one and Manager role to the other.
+- Sign into each account and make note of the JWT. We will provide these JWTs in our tests.
+- Import the postman collection `./starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json`
+- Right-clicking the collection folder for barista and manager, navigate to the authorization tab, and include the JWT in the token field you made note of previusly.
+- Run the collection
+
+>_tip_: ensure you are providing a recent JWT to ensure it is not expired and the user has not logged out of the account.
+
+## Error Handling
+Errors are returned as JSON objects in the following format:
+```
+{
+    "success": False, 
+    "error": 401,
+    "message": "Unauthorized"
+}
+```
+The API will return three error types when requests fail:
+- 401: Unauthorized
+- 404: Resource Not Found
+- 422: Unprocessable

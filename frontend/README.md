@@ -1,8 +1,8 @@
 # Coffee Shop Frontend
 
-## Getting Setup
+## Setting up the Frontend
 
-> _tip_: this frontend is designed to work with [Flask-based Backend](../backend). It is recommended you stand up the backend first, test using Postman, and then the frontend should integrate smoothly.
+> _tip_: this frontend is designed to work with [Flask-based Backend](../backend). It is recommended you setup up the backend first, test using Postman, and then the frontend should integrate smoothly.
 
 ### Installing Dependencies
 
@@ -16,7 +16,7 @@ The Ionic Command Line Interface is required to serve and build the frontend. In
 
 #### Installing project dependencies
 
-This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the `frontend` directory of this repository. After cloning, open your terminal and run:
+This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the `./frontend` directory of this repository. After cloning, open your terminal and run:
 
 ```bash
 npm install
@@ -24,17 +24,26 @@ npm install
 
 >_tip_: **npm i** is shorthand for **npm install**
 
-## Required Tasks
-
 ### Configure Enviornment Variables
 
 Ionic uses a configuration file to manage environment variables. These variables ship with the transpiled software and should not include secrets.
 
-- Open `./src/environments/environments.ts` and ensure each variable reflects the system you stood up for the backend.
-
+- Open `./src/environments/environments.ts` and ensure each variable reflects the system you setup for the backend.
+```py
+export const environment = {
+  production: false,
+  apiServerUrl: 'http://127.0.0.1:5000', // the running FLASK api server url
+  auth0: {
+    url: '', // the auth0 domain prefix
+    audience: '', // the audience set for the auth0 app
+    clientId: '', // the client id generated for the auth0 app
+    callbackURL: 'http://localhost:8100', // the base url of the running ionic application. 
+  }
+};
+``` 
 ## Running Your Frontend in Dev Mode
 
-Ionic ships with a useful development server which detects changes and transpiles as you work. The application is then accessible through the browser on a localhost port. To run the development server, cd into the `frontend` directory and run:
+Ionic ships with a useful development server which detects changes and transpiles as you work. The application is then accessible through the browser on a localhost port. To run the development server, cd into the `./frontend` directory and run:
 
 ```bash
 ionic serve
@@ -43,9 +52,7 @@ ionic serve
 >_tip_: Do not use **ionic serve**  in production. Instead, build Ionic into a build artifact for your desired platforms.
 [Checkout the Ionic docs to learn more](https://ionicframework.com/docs/cli/commands/build)
 
-## Key Software Design Relevant to Our Coursework
-
-The frontend framework is a bit beefy; here are the two areas to focus your study.
+## Key Software Design
 
 ### Authentication
 
