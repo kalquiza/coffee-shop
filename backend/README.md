@@ -143,7 +143,7 @@ Test your endpoints with [Postman](https://getpostman.com).
 #### POST /drinks
 - An endpoint that creates a new row in the drinks table. Requires the 'post:drinks' permission.
 - Returns a success value and list containing only the newly created drink in the drink.long() representation.
-> Example: `curl http://127.0.0.1:5000/drinks -X POST -H "Authorization: Bearer <ACCESS_TOKEN>, Content-Type: application/json" -d '{"title": "Water", "recipe": {"name": "Water", "color": "blue", "parts": 1}}'`
+> Example: `curl http://127.0.0.1:5000/drinks -X POST -H "Authorization: Bearer <ACCESS_TOKEN>" -H "Content-Type: application/json" -d '{"title": "Water", "recipe": {"name": "Water", "color": "blue", "parts": 1}}'`
 ```
 {
     "drink": {
@@ -160,7 +160,7 @@ Test your endpoints with [Postman](https://getpostman.com).
 ```
 #### PATCH /drinks/\<id>
 -   An endpoint that updates the corresponding row for \<id>. Requires the 'patch:drinks' permission. Returns a success value and list containing only the updated drink in the drink.long() representation.
-> Example: `curl http://127.0.0.1:5000/drinks/1 -X PATCH -H "Authorization: Bearer <ACCESS_TOKEN>, Content-Type: application/json" -d '{"title": "Dihydrogen monoxide"}'`
+> Example: `curl http://127.0.0.1:5000/drinks/1 -X PATCH -H "Authorization: Bearer <ACCESS_TOKEN>" -H "Content-Type: application/json" -d '{"title": "Dihydrogen monoxide"}'`
 ```
 {
     "drink": {
